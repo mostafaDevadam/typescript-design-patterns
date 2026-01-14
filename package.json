@@ -6,7 +6,7 @@
   "scripts": {
     "build": "tsc",
     "start:dev": "nodemon dist/index.js",
-    "dev": "npm run build:watch & npm run start:dev" 
+    "dev": "npm run build & npm run start:dev" 
     
   },
   "keywords": [],

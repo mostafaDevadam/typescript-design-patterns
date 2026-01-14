@@ -1,9 +1,11 @@
+import { Light, RemoteControl, TurnOffCommand, TurnOnCommand } from "./src/patterns/behavioral/command.js"
 import { ConcreteObserver, Subject } from "./src/patterns/behavioral/observer.js"
 import { CreditCardPayment, PaypalPayment, ShoppingCart } from "./src/patterns/behavioral/strategy.js"
 import { ShapeFactory } from "./src/patterns/creational/factory.js"
 import { Singleton } from "./src/patterns/creational/singleton.js"
 import { OldPrinter, PrinterAdapter } from "./src/patterns/structural/adapter.js"
 import { MilkDecorator, SimpleCoffee, type ICoffee } from "./src/patterns/structural/decorator.js"
+import { ComputerFacade } from "./src/patterns/structural/facade.js"
 
 console.log("start")
 console.log("start")
@@ -40,4 +42,20 @@ const cart1 = new ShoppingCart(new CreditCardPayment())
 cart1.checkout(100)
 const cart2 = new ShoppingCart(new PaypalPayment())
 cart2.checkout(100)
+//----------------
+const pc = new ComputerFacade()
+pc.startComputer()
+//----------------
+const light = new Light()
+const remote = new RemoteControl()
+
+const turnOn = new TurnOnCommand(light)
+const turnOff = new TurnOffCommand(light)
+
+remote.setCommand(turnOn)
+remote.pressButton()
+remote.pressUndo()
+remote.setCommand(turnOff)
+remote.pressButton()
+remote.pressUndo()
 

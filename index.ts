@@ -1,6 +1,7 @@
 import { Light, RemoteControl, TurnOffCommand, TurnOnCommand } from "./src/patterns/behavioral/command.js"
 import { ConcreteObserver, Subject } from "./src/patterns/behavioral/observer.js"
 import { CreditCardPayment, PaypalPayment, ShoppingCart } from "./src/patterns/behavioral/strategy.js"
+import { Builder, UserBuilder, UserDirector, type ICar } from "./src/patterns/creational/builder.js"
 import { ShapeFactory } from "./src/patterns/creational/factory.js"
 import { Singleton } from "./src/patterns/creational/singleton.js"
 import { OldPrinter, PrinterAdapter } from "./src/patterns/structural/adapter.js"
@@ -59,3 +60,22 @@ remote.setCommand(turnOff)
 remote.pressButton()
 remote.pressUndo()
 
+const user = new UserBuilder()
+.setName("John")
+.setAge(30)
+.setEmail("g2xkM@example.com")
+.setAddress("123 Main St")
+.build();
+
+console.log(user)
+
+const car = new Builder<ICar>()
+.set("brand", "Toyota")
+.set("model", "Camry")
+.set("year", 2022)
+.build((car) => car as ICar);
+
+console.log(car)
+
+const admin = UserDirector.createAdmin(new UserBuilder())
+console.log(admin)

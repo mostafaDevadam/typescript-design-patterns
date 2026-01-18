@@ -76,3 +76,59 @@ export interface ICar {
     model: string
     year: number
 }
+
+export class Pizza {
+    dough: string = ""
+    sauce: string = ""
+    topping: string = ""
+
+    describe(){
+        console.log(`Pizza with ${this.dough} dough, ${this.sauce} sauce, tauch with ${this.topping} `)
+    }
+}
+
+export interface IPizzaBuilder {
+    setDough(): this;
+    setSauce(): this;
+    setTopping(): this;
+    build(): Pizza
+}
+
+export class MargheritaPizzaBuilder implements IPizzaBuilder {
+    private pizza: Pizza = new Pizza()
+
+    constructor(){
+        this.pizza = new Pizza()
+    }
+
+    setDough(): this {
+        this.pizza.dough = "thin"
+        return this
+    }
+
+    setSauce(): this {
+        this.pizza.sauce = "tomato"
+        return this
+    }
+
+    setTopping(): this {
+        this.pizza.topping = "mozzarella"
+        return this
+    }
+
+    build(): Pizza {
+        return this.pizza
+    }
+
+}
+
+export class PizzaDirector {
+    constructor(private builder: IPizzaBuilder){}
+     makePizza() {
+        return this.builder
+            .setDough()
+            .setSauce()
+            .setTopping()
+            .build()
+    }
+}

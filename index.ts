@@ -11,13 +11,21 @@ import { ShapeFactory } from "./src/patterns/creational/factory.js"
 import { Color } from "./src/patterns/creational/multiton.js"
 import { Document } from "./src/patterns/creational/prototype.js"
 import { Singleton } from "./src/patterns/creational/singleton.js"
-import { DBUserRepository } from "./src/patterns/repository.js"
+import { DBUserRepository } from "./src/patterns/architectural/repository.js"
 import { OldPrinter, PrinterAdapter } from "./src/patterns/structural/adapter.js"
 import { BCircle, BSquare, RasterRenderer, VectorRenderer } from "./src/patterns/structural/bridge.js"
 import { MilkDecorator, SimpleCoffee, type ICoffee } from "./src/patterns/structural/decorator.js"
 import { ComputerFacade } from "./src/patterns/structural/facade.js"
 import { TextEditor } from "./src/patterns/structural/flyweight.js"
 import { ApiProxy, ApiService } from "./src/patterns/structural/proxy.js"
+import { CFile, Directory } from "./src/patterns/structural/composite.js"
+import { ConnectionPool, gameLoop } from "./src/patterns/creational/object-pool.js"
+import { OrderContext, SOrder } from "./src/patterns/behavioral/state.js"
+import { callEvent, ConsoleLogger, doDiscount, doPayment, doUserDB, process } from "./src/patterns/behavioral/nullObject.js"
+import { iteratorPattern, iteratorPattern2, iteratorPattern3, iteratorPattern4, iteratorPattern5, iteratorPattern6 } from "./src/patterns/behavioral/iterator.js"
+import { visitorPattern, visitorPattern2, visitorPattern3 } from "./src/patterns/behavioral/visitor.js"
+import { mementoPattern } from "./src/patterns/behavioral/memento.js"
+import { templateMethodPattern, templateMethodPattern2 } from "./src/patterns/behavioral/template-method.js"
 
 console.log("start")
 console.log("start")
@@ -153,6 +161,77 @@ console.log("vectorCircle", vectorCircle.draw())
 console.log("rasterCircle", rasterCircle.draw())
 console.log("vectorSquare", vectorSquare.draw())
 //----------------
+const root = new Directory("root")
+const docFile = new CFile("doc.txt", 100)
+const imageFile = new CFile("image.jpg", 200)
+const docsDir = new Directory('documents')
+docsDir.add(docFile)
+
+root.add(docsDir)
+root.add(imageFile)
+console.log("root", root.display())
+console.log(`Total size: ${root.getSize()} bytes`)
+root.remove(imageFile)
+console.log(`Updated size: ${root.getSize()} bytes`)
+//----------------
+const pool = new ConnectionPool(2)
+const c1 = pool.acquire()
+const c2 = pool.acquire()
+
+c1.query("SELECT * FROM users")
+c2.query("SELECT * FROM orders")
+
+pool.release(c1)
+const c3 = pool.acquire()
+//----------------
+gameLoop()
+//----------------
+const order = new OrderContext()
+order.pay()
+order.ship()
+order.cancel()
+//----------------
+const o = new SOrder()
+o.pay()
+o.ship()
+
+//----------------
+process()
+process(new ConsoleLogger())
+//----------------
+doDiscount(false)
+doDiscount(true)
+
+doUserDB(true)
+doUserDB(false)
+
+callEvent(true)
+callEvent(false)
+
+doPayment(true)
+doPayment(false)
+//--------------
+iteratorPattern()
+iteratorPattern2()
+iteratorPattern3()
+iteratorPattern4()
+console.log("------------")
+iteratorPattern5()
+console.log("------------")
+iteratorPattern6().then(() => console.log("done")).catch(() => console.log("error"))
+//---------------
+visitorPattern()
+visitorPattern2()
+visitorPattern3()
+
+//----------------
+mementoPattern()
+
+//----------------
+templateMethodPattern()
+templateMethodPattern2()
+
+//----------------
 
 
 // Decoration
@@ -175,3 +254,32 @@ const c = new Car()
 console.log(c.brand)
 console.log(c.year)
 c.brand = "asd"
+//----------------- generator
+function* gen() {
+    console.log("start")
+    yield 1
+    console.log("Middle")
+    yield 2
+    console.log("Second Middle ")
+    yield 3
+    console.log("end")
+}
+//console.log([...gen()])
+const gi = gen()
+gi.next()
+gi.next()
+gi.next()
+gi.next()
+
+async function* fetchData(){
+    yield await Promise.resolve("data-1")
+    yield await Promise.resolve("data-2")
+    yield await Promise.resolve("data-3")
+}
+
+for await (const data of fetchData()){
+    console.log(data)
+}
+//----------------------------
+const arr = [1,2,3]
+console.log("pop:", arr.pop())
